@@ -1,5 +1,5 @@
 
 # 需要引入的包
-flask
-flask_sqlalchemy
-pymysql
+1. flask
+2. flask_sqlalchemy
+3. pymysql
