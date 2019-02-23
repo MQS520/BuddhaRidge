@@ -93,10 +93,10 @@
                 <img src="{{ url_for('static', filename = 'assets/i/f10.jpg') }}" alt="" class="am-u-sm-12">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text" style="overflow: hidden">
-                <span><a href="" class="blog-color">article</a></span>
+                <span><a href="/" class="blog-color">article</a></span>
                 <span> @{{ article.author }} &nbsp;</span>
                 <span>{{ article.puthtime }}</span>
-                <h1><a href="">{{ article.title }}</a></h1>
+                <h1><a href="/article?id={{ article.id }}">{{ article.title }}</a></h1>
                 <p style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical">{{ article.content }}
                 </p>
                 <p><a href="" class="blog-continue">continue reading</a></p>

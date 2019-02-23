@@ -13,10 +13,21 @@ from app.common import *
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-    page = request.args.get('page', 1 , type=int)
-    print(page)
     try:
+        page = request.args.get('page', 1, type=int)
         pagination = Article.query.filter().order_by(Article.puthtime.desc()).paginate(page, per_page=5, error_out=False)
         return render_template('index.html', articles=pagination.items, pagination=pagination)
+    except Exception:
+        return render_template('common/error.html')
+
+
+@app.route('/article', methods=['GET'])
+def article():
+    try:
+        id = request.args.get('id', 0, type=int)
+        if id == 0:
+            return render_template('index.html')
+        article = Article.query.filter(Article.id == id).first()
+        return render_template('article.html', article = article)
     except Exception:
         return render_template('common/error.html')
