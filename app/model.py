@@ -4,7 +4,7 @@
 # datetime:2019/2/23 13:43
 # software: PyCharm
 # desc: 实体类
-from run import db
+from app import db
 import datetime
 
 # article表

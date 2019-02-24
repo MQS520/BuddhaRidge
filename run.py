@@ -1,19 +1,4 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from config import Config
 
+from app import app
 
-app = Flask(__name__)
-
-
-# 导入数据库配置文件
-app.config.from_object(Config)
-
-# 建立数据库连接
-db =SQLAlchemy(app)
-
-
-from app import index
-
-if __name__ == '__main__':
-    app.run()
+app.run(debug=True,host='127.0.0.1',port=8080)
