@@ -6,7 +6,8 @@
 # desc: 主页
 from app import app
 from flask import render_template, request
-from app.model import Article
+from app.model import *
+
 
 
 # 跳转首页
@@ -15,7 +16,8 @@ from app.model import Article
 def index():
     try:
         page = request.args.get('page', 1, type=int)
-        pagination = Article.query.filter().order_by(Article.puthtime.desc()).paginate(page, per_page=5, error_out=False)
+        pagination = Article.query.filter().order_by(Article.pushtime.desc()).paginate(page, per_page=5, error_out=False)
+        print(dir(pagination.items[0]))
         return render_template('index.html', articles=pagination.items, pagination=pagination)
     except Exception as err:
         print(err)

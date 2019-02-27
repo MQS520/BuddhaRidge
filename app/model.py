@@ -7,19 +7,65 @@
 from app import db
 import datetime
 
+
+# article_user 关联表
+article_user = db.Table('article_user',
+            db.Column('id',db.Integer,primary_key=True),
+            db.Column('article_id',db.Integer,db.ForeignKey('article.id')),
+            db.Column('user_id',db.Integer,db.ForeignKey('user.id'))
+         )
+
+# article_type 关联表
+article_type = db.Table('article_type',
+            db.Column('id',db.Integer,primary_key=True),
+            db.Column('article_id',db.Integer,db.ForeignKey('article.id')),
+            db.Column('type_id',db.Integer,db.ForeignKey('type.id'))
+         )
 # article表
 class Article(db.Model):
     __tablename__ = 'article'
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(255))
-    author = db.Column(db.String(255))
     content = db.Column(db.Text)
-    puthtime = db.Column(db.DateTime, default=datetime.datetime.now)
+    pushtime = db.Column(db.DateTime, default=datetime.datetime.now)
+    users = db.relationship('User', secondary= article_user, backref= db.backref('article'))
+    types = db.relationship('Type', secondary=article_type, backref=db.backref('article'))
 
     # 构造函数
-    def __init__(self, title, author, content):
+    def __init__(self, title, content):
         self.title = title
-        self.author = author
         self.content = content
 
+# user 表
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    nickname = db.Column(db.String(255))
+    account = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    role = db.Column(db.Integer, default=1)
+    status = db.Column(db.Integer, default=1)
+    createtime = db.Column(db.DateTime, default=datetime.datetime.now)
 
+# article_user表
+
+# class ArticleUser(db.Model):
+#     __tablename__ = 'article_user'
+#     id = db.Column(db.Integer, primary_key=True)
+#     article_id = db.Column(db.Integer)
+#     user_id = db.Column(db.Integer)
+
+# type表
+class Type(db.Model):
+    __tablename__ = 'type'
+    id = db.Column(db.Integer, primary_key=True)
+    article_type = db.Column(db.String(255))
+    status = db.Column(db.Integer)
+    createtime = db.Column(db.DateTime, default=datetime.datetime.now)
+
+# article_type表
+# class ArticleType(db.Model):
+#     __tablename__ = 'article_type'
+#     id = db.Column(db.Integer, primary_key=True)
+#     article_id = db.Column(db.Integer)
+#     type_id = db.Column(db.Integer)
