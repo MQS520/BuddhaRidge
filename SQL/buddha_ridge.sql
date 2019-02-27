@@ -11,11 +11,8 @@
  Target Server Version : 50634
  File Encoding         : 65001
 
- Date: 27/02/2019 20:54:28
+ Date: 27/02/2019 21:20:22
 */
-
-DROP DATABASE IF EXISTS `buddha_ridge`
-CREATE DATABASE `buddha_ridge` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -97,7 +94,7 @@ CREATE TABLE `type`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '文章类型',
   `status` int(11) NOT NULL DEFAULT 0 COMMENT '状态: 0正常; 1冻结',
-  `createtime` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
