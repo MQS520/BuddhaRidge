@@ -19,3 +19,4 @@ db =SQLAlchemy(app)
 
 from app import model
 from app import index
+from app import admin
