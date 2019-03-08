@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>佛祖岭民间技师团</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename = 'assets/i/favicon.jpg') }}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="{{ url_for('static', filename = 'assets/i/app-icon72x72@2x.png') }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="{{ url_for('static', filename = 'assets/i/app-icon72x72@2x.png') }}">
+  <meta name="msapplication-TileImage" content="{{ url_for('static', filename = 'assets/i/app-icon72x72@2x.png') }}">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/css/amazeui.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/css/app.css') }}">
+</head>
+
+<body id="blog">
+
+{% include 'common/header.html' %}
+
+<!-- banner start -->
+<div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
+    <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}' >
+    <ul class="am-slides">
+      <li>
+            <img src="{{ url_for('static', filename = 'assets/i/b1.jpg') }}">
+            <div class="blog-slider-desc am-slider-desc ">
+                <div class="blog-text-center blog-slider-con">
+{#                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               #}
+                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
+                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    </p>
+                    <span class="blog-bor">2019/02/23</span>
+                    <br><br><br><br><br><br><br>                
+                </div>
+            </div>
+      </li>
+      <li>
+            <img src="{{ url_for('static', filename = 'assets/i/b2.jpg') }}">
+            <div class="am-slider-desc blog-slider-desc">
+                <div class="blog-text-center blog-slider-con">
+{#                    <span><a href="" class="blog-color">Article &nbsp;</a></span>#}
+                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
+                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    </p>
+                    <span>2019/02/23</span>
+                </div>
+            </div>
+      </li>
+      <li>
+            <img src="{{ url_for('static', filename = 'assets/i/b3.jpg') }}">
+            <div class="am-slider-desc blog-slider-desc">
+                <div class="blog-text-center blog-slider-con">
+{#                    <span><a href="" class="blog-color">Article &nbsp;</a></span>#}
+                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
+                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    </p>
+                    <span>2019/02/23</span>
+                </div>
+            </div>
+      </li>
+      <li>
+            <img src="{{ url_for('static', filename = 'assets/i/b2.jpg') }}">
+            <div class="am-slider-desc blog-slider-desc">
+                <div class="blog-text-center blog-slider-con">
+{#                    <span><a href="" class="blog-color">Article &nbsp;</a></span>#}
+                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
+                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    </p>
+                    <span>2019/02/23</span>
+                </div>
+            </div>
+      </li>
+    </ul>
+    </div>
+</div>
+<!-- banner end -->
+
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed">
+    <div class="am-u-md-12 am-u-sm-12">
+        {% for article in articles  %}
+            <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                <img src="{{ url_for('static', filename = 'assets/i/f10.jpg') }}" alt="" class="am-u-sm-12">
+            </div>
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text" style="overflow: hidden">
+                <span class="am-icon-tags"> &nbsp;</span>
+                {% for type in article.types %}
+                    <span class="am-badge am-badge-success am-round">{{ type.article_type }}</span>
+                {% endfor %}
+                {% for user in article.users %}
+                    <span> @{{ user.nickname }};</span>
+                {% endfor %}
+                <br><span>{{ article.pushtime }}</span>
+                <h1><a href="/article?id={{ article.id }}">{{ article.title }}</a></h1>
+                <p style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical">{{ article.content | safe }}
+                </p>
+
+                <p><a href="" class="blog-continue">continue reading</a></p>
+            </div>
+        </article>
+        {% endfor %}
+
+        <ul class="am-pagination">
+            {% if pagination.has_prev %}
+                <li class="am-pagination-prev"><a href="/index?page={{ pagination.prev_num }}">&laquo; Prev</a></li>
+            {% else %}
+                <li class="am-pagination-prev"><a href="/">&laquo; Prev</a></li>
+            {% endif %}
+            {% if pagination.has_next %}
+                <li class="am-pagination-next"><a href="/index?page={{ pagination.next_num }}">Next &raquo;</a></li>
+            {% else %}
+                <li class="am-pagination-next"><a href="/">Next &raquo;</a></li>
+            {% endif %}
+
+        </ul>
+    </div>
+
+</div>
+<!-- content end -->
+
+{% include 'common/footer.html' %}
+
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="{{ url_for('static', filename = 'assets/js/jquery.min.js') }}"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="{{ url_for('static', filename = 'assets/js/amazeui.min.js') }}"></script>
+<!-- <script src="assets/js/app.js"></script> -->
+
+<script>
+
+</script>
+
+</body>
+</html>
