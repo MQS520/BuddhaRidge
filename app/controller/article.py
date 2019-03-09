@@ -15,12 +15,12 @@ articleRoute = Blueprint('articleRoute', __name__)
 def index():
     try:
         page = request.args.get('page', 1, type=int)
-        pagination = Article.query.filter().order_by(Article.pushtime.desc()).paginate(page, per_page=5, error_out=False)
+        pagination = Article.query.filter(Article.status == 1).order_by(Article.pushtime.desc()).paginate(page, per_page=5, error_out=False)
         print(dir(pagination.items[0]))
-        return render_template('index.html', articles=pagination.items, pagination=pagination)
+        return render_template('article/index.html', articles=pagination.items, pagination=pagination)
     except Exception as err:
         print(err)
-        return render_template('common/error.html')
+        return render_template('error.html')
 
 
 @articleRoute.route('/article', methods=['GET'])
@@ -28,8 +28,8 @@ def article():
     try:
         id = request.args.get('id', 0, type=int)
         if id == 0:
-            return render_template('index.html')
+            return render_template('article/index.html')
         article = Article.query.filter(Article.id == id).first()
-        return render_template('article.html', article = article)
+        return render_template('article/article.html', article = article)
     except Exception:
-        return render_template('common/error.html')
+        return render_template('error.html')

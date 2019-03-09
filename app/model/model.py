@@ -28,6 +28,7 @@ class Article(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(255))
     content = db.Column(db.Text)
+    status = db.Column(db.Integer, default=0)
     pushtime = db.Column(db.DateTime, default=datetime.datetime.now)
     users = db.relationship('User', secondary= article_user, backref= db.backref('article'))
     types = db.relationship('Type', secondary=article_type, backref=db.backref('article'))

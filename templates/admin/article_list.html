@@ -1,0 +1,124 @@
+{% extends 'admin/base.html' %}
+{% block content %}
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">文章列表</div>
+
+
+                        </div>
+                        <div class="widget-body  am-fr">
+
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                                <div class="am-form-group">
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <button type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
+                                            <button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>
+                                            <button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>
+                                            <button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+                                    <select data-am-selected="{btnSize: 'sm'}">
+          <option value="option1">所有类别</option>
+          <option value="option2">IT业界</option>
+          <option value="option3">数码产品</option>
+          <option value="option3">笔记本电脑</option>
+          <option value="option3">平板电脑</option>
+          <option value="option3">只能手机</option>
+          <option value="option3">超极本</option>
+        </select>
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field ">
+                                    <span class="am-input-group-btn">
+        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+      </span>
+                                </div>
+                            </div>
+
+                            <div class="am-u-sm-12">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                    <thead>
+                                        <tr>
+                                            <th>文章标题</th>
+                                            <th>作者</th>
+                                            <th>类别</th>
+                                            <th>状态</th>
+                                            <th>时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for article in articles %}
+                                            <tr class="gradeX">
+                                            <td>{{ article.title }}</td>
+                                            <td>
+                                                {% for user in article.users %}
+                                                    {{ user.nickname }};
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for type in article.types %}
+                                                    <span class="am-badge am-badge-success am-round">{{ type.article_type }}</span>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% if article.status == 0 %}
+                                                    <span class="am-text-secondary">未审核</span>
+                                                {% elif article.status == 1 %}
+                                                    <span class="am-text-success">审核通过</span>
+                                                {% else %}
+                                                    <span class="am-text-danger">审核未通过</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ article.pushtime }}</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="am-u-lg-12 am-cf">
+
+                                <div class="am-fr">
+                                    <ul class="am-pagination tpl-pagination">
+                                        {% if pagination.has_prev %}
+                                            <li><a href="/article_list?page={{ pagination.prev_num }}">«</a></li>
+                                        {% else %}
+                                            <li class="am-disabled"><a href="#">&laquo; Prev</a></li>
+                                        {% endif %}
+                                        {% if pagination.has_next %}
+                                            <li><a href="/article_list?page={{ pagination.next_num }}">»</a></li>
+                                        {% else %}
+                                            <li class="am-disabled"><a href="#">Next &raquo;</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

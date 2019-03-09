@@ -16,7 +16,7 @@ login_manager.login_message='请登录'
 login_manager.init_app(app)
 
 from app.controller.admin import userRoute
-from app.controller.index import articleRoute
+from app.controller.article import articleRoute
 
 app.register_blueprint(userRoute,url_prefix='')
 app.register_blueprint(articleRoute,url_prefix='')
