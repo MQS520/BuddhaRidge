@@ -11,7 +11,7 @@
  Target Server Version : 50634
  File Encoding         : 65001
 
- Date: 27/02/2019 21:20:22
+ Date: 18/03/2019 21:30:50
 */
 
 SET NAMES utf8mb4;
@@ -25,6 +25,7 @@ CREATE TABLE `article`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '标题',
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '内容',
+  `status` int(4) NOT NULL DEFAULT 0 COMMENT '0 未审核; 1 审核通过; 2 审核不通过',
   `pushtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '发布时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -32,13 +33,13 @@ CREATE TABLE `article`  (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES (1, 'hahah', 'ssss', '2019-02-23 13:57:33');
-INSERT INTO `article` VALUES (2, 'ssssss', 'ssss', '2019-02-23 13:57:51');
-INSERT INTO `article` VALUES (3, 'aaaaaaaaaa', 'ssssss', '2019-02-23 14:08:41');
-INSERT INTO `article` VALUES (4, 'bbbbbbbbb', 'bbbbbbbbb', '2019-02-23 14:08:49');
-INSERT INTO `article` VALUES (5, 'ccccc', 'cccccccc', '2019-02-23 14:08:57');
-INSERT INTO `article` VALUES (6, 'dddddddd', '<h1>你好啊啊啊啊</h1>', '2019-02-24 10:32:46');
-INSERT INTO `article` VALUES (7, 'Win10 Contul安装', '一. 下载consul\n\n这里的系统是win10 64位的,找到对应版本下载\n\n官网下载地址\n\n二. 配置\n\n下载后解压,将解压后的consul.exe文件放到想要安装的位置,如D://software/consul\n\n将此路径加入到环境变量Path中,即可\n\n三. 启动\n\n控制台输入命令启动\n\nconsul agent -dev\n\n打开浏览器输入地址\n\nlocalhost:8500/ 就可以看到consul的页面了', '2019-02-24 10:48:44');
+INSERT INTO `article` VALUES (1, 'hahah', 'ssss', 1, '2019-03-09 17:54:53');
+INSERT INTO `article` VALUES (2, 'ssssss', 'ssss', 1, '2019-03-09 17:54:55');
+INSERT INTO `article` VALUES (3, 'aaaaaaaaaa', 'ssssss', 1, '2019-03-09 17:54:57');
+INSERT INTO `article` VALUES (4, 'bbbbbbbbb', 'bbbbbbbbb', 1, '2019-03-09 17:54:58');
+INSERT INTO `article` VALUES (5, 'ccccc', 'cccccccc', 0, '2019-03-09 17:57:43');
+INSERT INTO `article` VALUES (6, 'dddddddd', '<h1>你好啊啊啊啊</h1>', 1, '2019-03-09 17:55:01');
+INSERT INTO `article` VALUES (7, 'Win10 Contul安装', '一. 下载consul\n\n这里的系统是win10 64位的,找到对应版本下载\n\n官网下载地址\n\n二. 配置\n\n下载后解压,将解压后的consul.exe文件放到想要安装的位置,如D://software/consul\n\n将此路径加入到环境变量Path中,即可\n\n三. 启动\n\n控制台输入命令启动\n\nconsul agent -dev\n\n打开浏览器输入地址\n\nlocalhost:8500/ 就可以看到consul的页面了', 1, '2019-03-09 17:55:03');
 
 -- ----------------------------
 -- Table structure for article_type
@@ -123,7 +124,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'MQS', 'MQS', '520753', 0, 0, '2019-02-24 11:05:45');
+INSERT INTO `user` VALUES (1, 'MQS', 'MQS', '123456', 0, 0, '2019-03-02 13:31:04');
 INSERT INTO `user` VALUES (2, 'aaa', 'aaa', '123456', 0, 0, '2019-02-24 11:13:22');
 
 SET FOREIGN_KEY_CHECKS = 1;
