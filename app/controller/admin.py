@@ -8,13 +8,7 @@ from run import login_manager
 from flask import render_template, request, Blueprint,url_for,redirect
 from flask_login import login_user, login_required,logout_user
 from app.model.model import *
-
-# 创建蓝图
-userRoute = Blueprint('userRoute', __name__)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+from . import userRoute
 
 
 # 后台管理页面
@@ -60,3 +54,11 @@ def article_list():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.filter().order_by(Article.pushtime.desc()).paginate(page, per_page=10,error_out=False)
     return render_template('admin/article_list.html', articles=pagination.items, pagination=pagination)
+
+# 文章新增或编辑,页面跳转
+@userRoute.route('/article_modify', methods=['GET'])
+@login_required
+def article_modify():
+    article_id = request.args.get('article_id', 0, type=int)
+    article = Article.query.filter(Article.id == article_id).first()
+    return render_template('admin/article_modify.html', article = article)

@@ -6,8 +6,8 @@
 # desc: 主页
 from flask import render_template, request,Blueprint
 from app.model.model import *
+from . import articleRoute
 
-articleRoute = Blueprint('articleRoute', __name__)
 
 # 跳转首页
 @articleRoute.route('/', methods=['GET'])
