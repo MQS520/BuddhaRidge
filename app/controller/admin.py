@@ -59,6 +59,11 @@ def article_list():
 @userRoute.route('/article_modify', methods=['GET'])
 @login_required
 def article_modify():
+    # 若编辑，查询文章信息
     article_id = request.args.get('article_id', 0, type=int)
     article = Article.query.filter(Article.id == article_id).first()
-    return render_template('admin/article_modify.html', article = article)
+    # 获取用户列表
+    users = User.query.filter().all()
+    # 获取文章类型
+    types = Type.query.filter().all()
+    return render_template('admin/article_modify.html', article = article, users = users, types = types)

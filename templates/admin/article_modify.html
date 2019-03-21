@@ -20,7 +20,7 @@
                                     <label for="user-name" class="am-u-sm-1 am-form-label">标题 <span
                                             class="tpl-form-line-small-title">Title</span></label>
                                     <div class="am-u-sm-11">
-                                        <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入标题文字">
+                                        <input type="text" class="tpl-form-input" id="title" placeholder="请输入标题文字">
                                         <small>请填写标题文字100字以内。</small>
                                     </div>
                                 </div>
@@ -34,33 +34,16 @@
                                 </div>
 
                                 <div class="am-form-group">
-                                    <label for="user-email" class="am-u-sm-1 am-form-label">发布时间 <span
-                                            class="tpl-form-line-small-title">Time</span></label>
-                                    <div class="am-u-sm-11">
-                                        <input type="text" class="am-form-field tpl-form-no-bg" placeholder="发布时间"
-                                               data-am-datepicker="" readonly="">
-                                        <small>发布时间为必填</small>
-                                    </div>
-                                </div>
-
-                                <div class="am-form-group">
                                     <label for="user-phone" class="am-u-sm-1 am-form-label">作者 <span
                                             class="tpl-form-line-small-title">Author</span></label>
                                     <div class="am-u-sm-11">
-                                        <select data-am-selected="{searchBox: 1}" style="display: none;">
-                                            <option value="a">-The.CC</option>
-                                            <option value="b">夕风色</option>
-                                            <option value="o">Orange</option>
+                                        <select multiple data-am-selected="{searchBox: 1}" style="display: none;">
+                                            <option value=""></option>
+                                            {% for user in users %}
+                                                <option value="{{ user.id }}">{{ user.nickname }}</option>
+                                            {% endfor %}
                                         </select>
 
-                                    </div>
-                                </div>
-
-                                <div class="am-form-group">
-                                    <label class="am-u-sm-1 am-form-label">SEO关键字 <span
-                                            class="tpl-form-line-small-title">SEO</span></label>
-                                    <div class="am-u-sm-11">
-                                        <input type="text" placeholder="输入SEO关键字">
                                     </div>
                                 </div>
 
@@ -85,10 +68,12 @@
                                     <label for="user-weibo" class="am-u-sm-1 am-form-label">添加分类 <span
                                             class="tpl-form-line-small-title">Type</span></label>
                                     <div class="am-u-sm-11">
-                                        <input type="text" id="user-weibo" placeholder="请添加分类用点号隔开">
-                                        <div>
-
-                                        </div>
+                                        <select multiple data-am-selected="{searchBox: 1}" style="display: none;">
+                                            <option value=""></option>
+                                                {% for type in types %}
+                                                    <option value="{{ type.id }}">{{ type.article_type }}</option>
+                                                {% endfor %}
+                                            </select>
                                     </div>
                                 </div>
 
@@ -109,7 +94,7 @@
 
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交
+                                        <button id="submitArticle" type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交
                                         </button>
                                     </div>
                                 </div>
@@ -122,12 +107,21 @@
     </div>
     <script src="{{ url_for('static', filename = 'markdown/editormd.min.js') }}"></script>
     <script>
+        var markdown;
         $(function () {
-            var markdown = editormd({
+            markdown = editormd({
                 id: "markdown",
                 path: "/static/markdown/lib/",
-                height: 700
+                height: 700,
+                toolbarIcons: function(){
+                    return ["bold","italic","del","h1","h2","h3","quote","list-ol","list-ul","link","code","code-block","table","image","undo","redo"]
+                }
             })
         })
+        $("#submitArticle").click(function(){
+            var content = $(".editormd-markdown-textarea").val();
+
+        })
+        
     </script>
 {% endblock %}
