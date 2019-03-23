@@ -42,12 +42,10 @@
                                         <select id="users" multiple data-am-selected="{searchBox: 1}" style="display: none;">
                                             <option value=""></option>
                                             {% for user in users %}
-                                                {% if article %}
+                                                {% if article != null %}
                                                     {% for a_user in article.users %}
                                                         {% if user.id == a_user.id %}
                                                             <option value="{{ user.id }}" selected>{{ user.nickname }}</option>
-                                                        {% else %}
-                                                            <option value="{{ user.id }}">{{ user.nickname }}</option>
                                                         {% endif %}
                                                     {% endfor %}
                                                 {% else %}
@@ -87,8 +85,6 @@
                                                         {% for a_type in article.types %}
                                                             {% if type.id == a_type.id %}
                                                                 <option value="{{ type.id }}" selected>{{ type.article_type }}</option>
-                                                            {% else %}
-                                                                <option value="{{ type.id }}">{{ type.article_type }}</option>
                                                             {% endif %}
                                                         {% endfor %}
                                                     {% else %}
