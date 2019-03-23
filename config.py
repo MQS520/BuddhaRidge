@@ -8,7 +8,7 @@
 class Config(object):
     # 设置密匙要没有规律
     SECRET_KEY = "You will never guess!"
-    # 格式为mysql+pymysql://数据库用户名:密码@数据库地址:端口号/数据库的名字?数据库格式
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@localhost:3306/buddha_ridge?charset=utf8'
+    # 格式为mysql+pymysql://数据库用户名:密码@数据库地址:端口号/数据库的名字?数据库格式&自动提交
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@localhost:3306/buddha_ridge?charset=utf8&autocommit=true'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True

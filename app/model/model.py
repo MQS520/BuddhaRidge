@@ -33,10 +33,6 @@ class Article(db.Model):
     users = db.relationship('User', secondary= article_user, backref= db.backref('article'))
     types = db.relationship('Type', secondary=article_type, backref=db.backref('article'))
 
-    # 构造函数
-    def __init__(self, title, content):
-        self.title = title
-        self.content = content
 
 # user 表
 class User(db.Model, UserMixin):

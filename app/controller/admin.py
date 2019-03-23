@@ -9,6 +9,7 @@ from flask import render_template, request, Blueprint,url_for,redirect
 from flask_login import login_user, login_required,logout_user
 from app.model.model import *
 from . import userRoute
+from app.common import Result
 
 
 # 后台管理页面
@@ -42,7 +43,7 @@ def login():
 # 登出
 @userRoute.route('/logout', methods=['GET'])
 @login_required
-def logout():
+def logot():
     logout_user()
     return render_template('admin/login.html')
 
@@ -67,3 +68,42 @@ def article_modify():
     # 获取文章类型
     types = Type.query.filter().all()
     return render_template('admin/article_modify.html', article = article, users = users, types = types)
+
+# 文章新增或编辑，提交
+@userRoute.route('/article_modify', methods=['POST'])
+@login_required
+def article_submit():
+    # 获取参数
+    article_id = request.form.get('id') 
+    title = request.form.get('title')
+    content = request.form.get('content')
+    userStr = request.form.get('users')
+    typeStr = request.form.get('types')
+    users = userStr.split(',')
+    types = typeStr.split(',')
+    article = None
+    # 判断是新增或编辑
+    if article_id != '':
+        # 编辑
+        article = Article.query.filter(Article.id == article_id).first()
+        article.title = title
+        article.content = content
+         # 先移除文章与作者以及类型的关系
+        for user in article.users:
+            article.users.remove(user)
+        for type in article.types:
+            article.types.remove(type)
+    else:
+        # 新增
+        article = Article()
+        article.title = title
+        article.content = content
+    # 重新添加关系
+    for user_id in users:
+        user = User.query.filter(User.id == user_id).first()
+        article.users.append(user)
+    for type_id in types:
+        a_type = Type.query.filter(Type.id == type_id).first()
+        article.types.append(a_type)
+    # db.session.commit()
+    return Result("success", "hhhhhh", None)
