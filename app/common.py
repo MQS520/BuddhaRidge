@@ -7,7 +7,7 @@
 from flask import Response
 import json
 
-# 返回json结果
+'''返回json结果'''
 def Result(status, msg, data):
     result = {
         'status': status,

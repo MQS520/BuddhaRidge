@@ -168,7 +168,13 @@
                 dataType: "json",
                 data:{id: id,title: title, content: content, users: users.toString(), types: types.toString()},
                 success: function(result){
-                    console.log(result.msg);
+                    if (result.status){
+                        alert("操作成功！");
+                        window.location.href = '/article_list';
+                    } else{
+                        alert("未知错误，请联系管理员!");
+                        console.log(result.msg);
+                    }
                 },
                 error: function(result){
                     alert("未知错误，请联系管理员!")

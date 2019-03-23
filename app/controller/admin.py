@@ -12,13 +12,13 @@ from . import userRoute
 from app.common import Result
 
 
-# 后台管理页面
+'''后台管理页面'''
 @userRoute.route('/admin',methods=['GET'])
 @login_required
 def adminIndex():
     return render_template('admin/index.html')
 
-# 登录
+'''登录'''
 @userRoute.route('/login', methods=['POST','GET'])
 def login():
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def login():
 
     return render_template('admin/login.html')
 
-# 登出
+'''登出'''
 @userRoute.route('/logout', methods=['GET'])
 @login_required
 def logot():
@@ -48,7 +48,7 @@ def logot():
     return render_template('admin/login.html')
 
 
-# 文章列表管理
+'''文章列表管理'''
 @userRoute.route('/article_list', methods=['GET'])
 @login_required
 def article_list():
@@ -56,7 +56,7 @@ def article_list():
     pagination = Article.query.filter().order_by(Article.pushtime.desc()).paginate(page, per_page=10,error_out=False)
     return render_template('admin/article_list.html', articles=pagination.items, pagination=pagination)
 
-# 文章新增或编辑,页面跳转
+'''文章新增或编辑,页面跳转'''
 @userRoute.route('/article_modify', methods=['GET'])
 @login_required
 def article_modify():
@@ -69,41 +69,43 @@ def article_modify():
     types = Type.query.filter().all()
     return render_template('admin/article_modify.html', article = article, users = users, types = types)
 
-# 文章新增或编辑，提交
+'''文章新增或编辑，提交'''
 @userRoute.route('/article_modify', methods=['POST'])
 @login_required
 def article_submit():
-    # 获取参数
-    article_id = request.form.get('id') 
-    title = request.form.get('title')
-    content = request.form.get('content')
-    userStr = request.form.get('users')
-    typeStr = request.form.get('types')
-    users = userStr.split(',')
-    types = typeStr.split(',')
-    article = None
-    # 判断是新增或编辑
-    if article_id != '':
-        # 编辑
-        article = Article.query.filter(Article.id == article_id).first()
-        article.title = title
-        article.content = content
-         # 先移除文章与作者以及类型的关系
-        for user in article.users:
-            article.users.remove(user)
-        for type in article.types:
-            article.types.remove(type)
-    else:
-        # 新增
-        article = Article()
-        article.title = title
-        article.content = content
-    # 重新添加关系
-    for user_id in users:
-        user = User.query.filter(User.id == user_id).first()
-        article.users.append(user)
-    for type_id in types:
-        a_type = Type.query.filter(Type.id == type_id).first()
-        article.types.append(a_type)
-    # db.session.commit()
-    return Result("success", "hhhhhh", None)
+    try:
+        # 获取参数
+        article_id = request.form.get('id') 
+        title = request.form.get('title')
+        content = request.form.get('content')
+        userStr = request.form.get('users')
+        typeStr = request.form.get('types')
+        users = userStr.split(',')
+        types = typeStr.split(',')
+        article = None
+        # 判断是新增或编辑
+        if article_id != '':
+            # 编辑
+            article = Article.query.filter(Article.id == article_id).first()
+            article.title = title
+            article.content = content
+            # 先移除文章与作者以及类型的关系
+            for user in article.users:
+                article.users.remove(user)
+            for type in article.types:
+                article.types.remove(type)
+        else:
+            # 新增
+            article = Article()
+            article.title = title
+            article.content = content
+        # 重新添加关系
+        for user_id in users:
+            user = User.query.filter(User.id == user_id).first()
+            article.users.append(user)
+        for type_id in types:
+            a_type = Type.query.filter(Type.id == type_id).first()
+            article.types.append(a_type)
+        return Result("true", "成功", None)
+    except Exception as err:
+        return Result("false", err, None)
