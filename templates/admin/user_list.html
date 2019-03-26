@@ -28,9 +28,8 @@
                             <div class="am-form-group tpl-table-list-select">
                                 <select id="article_type" data-am-selected="{btnSize: 'sm'}">
                                     <option value="-1">所有类别</option>
-                                    {% for type in types %}
-                                        <option value="{{ type.id }}">{{ type.article_type }}</option>
-                                    {% endfor %}
+                                    <option value="0">管理员</option>
+                                    <option value="1">普通用户</option>
                                 </select>
                             </div>
                         </div>
@@ -51,52 +50,53 @@
                                 <thead>
                                     <tr>
                                         <th>序号</th>
-                                        <th>文章标题</th>
-                                        <th>作者</th>
-                                        <th>类别</th>
+                                        <th>账户</th>
+                                        <th>昵称</th>
+                                        <th>角色</th>
                                         <th>状态</th>
-                                        <th>时间</th>
+                                        <th>创建时间</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for article in articles %}
+                                    {% for user in users %}
                                     <tr class="gradeX">
                                         <td>{{ loop.index }}</td>
-                                        <td>{{ article.title }}</td>
                                         <td>
-                                            {% for user in article.users %}
-                                            {{ user.nickname }};
-                                            {% endfor %}
+                                            {{ user.account }}
                                         </td>
                                         <td>
-                                            {% for type in article.types %}
-                                            <span
-                                                class="am-badge am-badge-success am-round">{{ type.article_type }}</span>
-                                            {% endfor %}
+                                            {{ user.nickname }}
                                         </td>
                                         <td>
-                                            {% if article.status == 0 %}
-                                            <span class="am-text-secondary">未审核</span>
-                                            {% elif article.status == 1 %}
-                                            <span class="am-text-success">审核通过</span>
+                                            {% if user.role == 0 %}
+                                                <span class="am-text-secondary">管理员</span>
                                             {% else %}
-                                            <span class="am-text-danger">审核未通过</span>
+                                                <span class="am-text-danger">普通用户</span>
                                             {% endif %}
                                         </td>
-                                        <td>{{ article.pushtime }}</td>
+                                        <td>
+                                            {% if user.status == 0 %}
+                                                <span class="am-text-secondary">正常</span>
+                                            {% else %}
+                                                <span class="am-text-danger">冻结</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.createtime }}</td>
                                         <td>
                                             <div class="tpl-table-black-operation">
-                                                {% for user in article.users %}
-                                                    {% if user.account == current_user.account %}
-                                                        <a href="javascript:;" onclick="modify({{ article.id }})">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                <a href="javascript:;" onclick="auditing({{ article.id }})" class="tpl-table-black-operation">
-                                                    <i class="am-icon-check"></i> 审核
+                                                <a href="javascript:;" onclick="modify({{ user.id }})">
+                                                    <i class="am-icon-pencil"></i> 编辑
                                                 </a>
+                                                {% if user.status == 0 %}
+                                                    <a href="javascript:;" onclick="manage({{ user.id }}, 1)" class="tpl-table-black-operation">
+                                                        <i class="am-icon-check"></i> 禁用
+                                                    </a>
+                                                {% else %}
+                                                    <a href="javascript:;" onclick="manage({{ user.id }}, 0)" class="tpl-table-black-operation">
+                                                        <i class="am-icon-check"></i> 启用
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>
@@ -109,12 +109,12 @@
                             <div class="am-fr">
                                 <ul class="am-pagination tpl-pagination">
                                     {% if pagination.has_prev %}
-                                    <li><a href="/article_list?page={{ pagination.prev_num }}">&laquo; Prev</a></li>
+                                    <li><a href="/user_list?page={{ pagination.prev_num }}">&laquo; Prev</a></li>
                                     {% else %}
                                     <li class="am-disabled"><a href="#">&laquo; Prev</a></li>
                                     {% endif %}
                                     {% if pagination.has_next %}
-                                    <li><a href="/article_list?page={{ pagination.next_num }}">Next &raquo;</a></li>
+                                    <li><a href="/user_list?page={{ pagination.next_num }}">Next &raquo;</a></li>
                                     {% else %}
                                     <li class="am-disabled"><a href="#">Next &raquo;</a></li>
                                     {% endif %}
@@ -128,17 +128,13 @@
     </div>
 </div>
 
-<div class="am-modal am-modal-prompt" tabindex="-1" id="article_auditing">
+<div class="am-modal am-modal-prompt" tabindex="-1" id="user_status">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd">文章审核
+        <div class="am-modal-hd">用户状态
             <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
         </div>
-        <div class="am-modal-bd">
-            <select id="status" data-am-selected="{btnSize: 'sm'}">
-                <option value="0">未审核</option>
-                <option value="1">审核通过</option>
-                <option value="2">审核不通过</option>
-            </select>
+        <div id="message" class="am-modal-bd">
+            
         </div>
         <div class="am-modal-footer">
             <span class="am-modal-btn" data-am-modal-cancel>取消</span>
@@ -162,35 +158,39 @@
     })
 
     //新增或者编辑文章
-    function modify(article_id) {
-        window.location.href = '/article_modify?article_id=' + article_id;
+    function modify(user_id) {
+        window.location.href = '/user_modify?user_id=' + user_id;
     }
     //文章审核
-    function auditing(article_id){
-        var $modal = $("#article_auditing");
+    function manage(user_id, status){
+        if (status == 0){
+            $("#message").html("确定要恢复该用户？");
+        }else{
+            $("#message").html("确定要冻结该用户？");
+        }
+        var $modal = $("#user_status");
         $modal.modal({
             relatedTarget: this,
             onConfirm: function(){
-                var status = $("#status").val();
                 $.ajax({
-                url: "/article_auditing",
-                type: "post",
-                dataType: "json",
-                data:{article_id: article_id,status: status},
-                success: function(result){
-                    if (result.status){
-                        alert("操作成功！");
-                        window.location.reload();
-                    } else{
-                        alert("未知错误，请联系管理员!");
-                        console.log(result.msg);
+                    url: "/user_status",
+                    type: "post",
+                    dataType: "json",
+                    data:{id: user_id,status: status},
+                    success: function(result){
+                        if (result.status){
+                            alert("操作成功！");
+                            window.location.reload();
+                        } else{
+                            alert("未知错误，请联系管理员!");
+                            console.log(result.msg);
+                        }
+                    },
+                    error: function(result){
+                        alert("未知错误，请联系管理员!")
+                        console.log(result);
                     }
-                },
-                error: function(result){
-                    alert("未知错误，请联系管理员!")
-                    console.log(result);
-                }
-            })
+                })
             },
             onCancel: function(){
                 console.log("取消审核！")

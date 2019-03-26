@@ -7,6 +7,7 @@
 from run import db
 from flask_login import UserMixin
 import datetime
+from app.common import md5
 
 
 # article_user 关联表
@@ -29,7 +30,7 @@ class Article(db.Model):
     title = db.Column(db.String(255))
     content = db.Column(db.Text)
     status = db.Column(db.Integer, default=0)
-    pushtime = db.Column(db.DateTime, default=datetime.datetime.now)
+    pushtime = db.Column(db.DateTime)
     users = db.relationship('User', secondary= article_user, backref= db.backref('article'))
     types = db.relationship('Type', secondary=article_type, backref=db.backref('article'))
 
@@ -45,6 +46,12 @@ class User(db.Model, UserMixin):
     status = db.Column(db.Integer, default=1)
     createtime = db.Column(db.DateTime, default=datetime.datetime.now)
 
+    def __init__(self, account, nickname, password, role, status):
+        self.account = account
+        self.nickname = nickname
+        self.password = md5(password)
+        self.role = role
+        self.status = status
 
 
 # type表

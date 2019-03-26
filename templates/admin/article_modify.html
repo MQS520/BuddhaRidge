@@ -42,7 +42,7 @@
                                         <select id="users" multiple data-am-selected="{searchBox: 1}" style="display: none;">
                                             <option value=""></option>
                                             {% for user in users %}
-                                                {% if article != null %}
+                                                {% if article %}
                                                     {% for a_user in article.users %}
                                                         {% if user.id == a_user.id %}
                                                             <option value="{{ user.id }}" selected>{{ user.nickname }}</option>

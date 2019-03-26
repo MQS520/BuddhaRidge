@@ -1,0 +1,126 @@
+{% extends 'admin/base.html' %}
+{% block content %}
+<!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title am-fl">用户新增/编辑</div>
+                        </div>
+                        <div class="widget-body am-fr">
+
+                            <form class="am-form tpl-form-line-form">
+                                <input id="user_id" type="hidden" value="{{ user.id }}">
+                                <div class="am-form-group">
+                                    <label for="user-name" class="am-u-sm-1 am-form-label">账户</label>
+                                    <div class="am-u-sm-11">
+                                        <input type="text" class="tpl-form-input" id="account" placeholder="请输入用户账户" value="{{ user.account }}">
+                                        <small></small>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="user-phone" class="am-u-sm-1 am-form-label">昵称</label>
+                                    <div class="am-u-sm-11">
+                                        <input type="text" name="" id="nickname" value="{{ user.nickname }}" placeholder="请输入用户昵称" class="tpl-form-input">
+                                        <small></small>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="user-weibo" class="am-u-sm-1 am-form-label">密码</label>
+                                    <div class="am-u-sm-11">
+                                        <input type="password" name="" id="password" placeholder="请输入登录密码" class="tpl-form-input">
+                                        <small></small>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="user-weibo" class="am-u-sm-1 am-form-label">角色</label>
+                                    <div class="am-u-sm-11">
+                                        <select id="role" data-am-selected>
+                                            {% if user.role == 0 %}
+                                                <option value="0" selected>管理员</option>
+                                                <option value="1">普通用户</option>
+                                            {% else %}
+                                                <option value="0">管理员</option>
+                                                <option value="1" selected>普通用户</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="user-intro" class="am-u-sm-1 am-form-label">状态</label>
+                                    <div class="am-u-sm-11">
+                                        <select id="status" data-am-selected>
+                                            {% if user.status == 1 %}
+                                                <option value="0">正常</option>
+                                                <option value="1" selected>冻结</option>
+                                            {% else %}
+                                                <option value="0" selected>正常</option>
+                                                <option value="1">冻结</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                        <button id="submitArticle" type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        $("#submitArticle").click(function(){
+            var id = $("#user_id").val();
+            var account = $("#account").val();
+            var nickname = $("#nickname").val();
+            var password = $("#password").val();
+            var role = $("#role").val();  
+            var status = $("#status").val();  
+            if (account == null || account == ''){
+                alert("请输入登录账户！");
+                return;
+            }
+            if (nickname == null || nickname == ''){
+                alert("请输入用户昵称！");
+                return;
+            }
+            if (password == null || password == ''){
+                alert("请选择登录密码！");
+                return;
+            }
+            $.ajax({
+                url: "/user_modify",
+                type: "post",
+                dataType: "json",
+                data:{id: id,account: account, nickname: nickname, password: password, role: role, status: status},
+                success: function(result){
+                    if (result.status){
+                        alert("操作成功！");
+                        window.location.href = '/user_list';
+                    } else{
+                        alert("未知错误，请联系管理员!");
+                        console.log(result.msg);
+                    }
+                },
+                error: function(result){
+                    alert("未知错误，请联系管理员!")
+                    console.log(result);
+                }
+            })
+        })
+        
+    </script>
+{% endblock %}

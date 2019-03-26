@@ -9,7 +9,7 @@ from flask import render_template, request, Blueprint,url_for,redirect
 from flask_login import login_user, login_required,logout_user
 from app.model.model import *
 from . import userRoute
-from app.common import Result
+from app.common import Result,md5
 
 
 '''后台管理页面'''
@@ -30,11 +30,14 @@ def login():
             return render_template('admin/login.html', error='请输入密码!', account=account)
         user = User.query.filter(User.account == account).first()
         if user:
-            if user.password == password:
-                login_user(user)
-                return redirect(url_for('userRoute.adminIndex'))
+            if user.status == 0:
+                if user.password == md5(password):
+                    login_user(user)
+                    return redirect(url_for('userRoute.adminIndex'))
+                else:
+                    return render_template('admin/login.html', error='密码错误!', account = account)
             else:
-                return render_template('admin/login.html', error='密码错误!', account = account)
+                return render_template('admin/login.html', error='用户已冻结，请联系管理员！')
         else:
             return render_template('admin/login.html',error = '该用户不存在!')
 
@@ -54,7 +57,8 @@ def logot():
 def article_list():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.filter().order_by(Article.pushtime.desc()).paginate(page, per_page=10,error_out=False)
-    return render_template('admin/article_list.html', articles=pagination.items, pagination=pagination)
+    types = Type.query.filter(Type.status == 0).all()
+    return render_template('admin/article_list.html', articles=pagination.items, pagination=pagination, types=types)
 
 '''文章新增或编辑,页面跳转'''
 @userRoute.route('/article_modify', methods=['GET'])
@@ -72,7 +76,7 @@ def article_modify():
 '''文章新增或编辑，提交'''
 @userRoute.route('/article_modify', methods=['POST'])
 @login_required
-def article_submit():
+def article_modify_submit():
     try:
         # 获取参数
         article_id = request.form.get('id') 
@@ -84,7 +88,7 @@ def article_submit():
         types = typeStr.split(',')
         article = None
         # 判断是新增或编辑
-        if article_id != '':
+        if article_id != '' and article_id != None:
             # 编辑
             article = Article.query.filter(Article.id == article_id).first()
             article.title = title
@@ -109,3 +113,81 @@ def article_submit():
         return Result("true", "成功", None)
     except Exception as err:
         return Result("false", err, None)
+
+'''' 文章审核 '''
+@userRoute.route('/article_auditing', methods=['POST'])
+@login_required
+def article_auditing():
+    try:
+        # 获取参数
+        article_id = request.form.get('article_id')
+        status = request.form.get('status')
+        i = Article.query.filter(Article.id == article_id).update({'status':status})
+        if i > 0:
+            return Result("true", "审核完成！", None)
+        else:
+            return Result("false", "审核失败！", None)
+    except Exception as err:
+        return Result("false", err, None)
+
+
+
+''' 用户列表管理页面 '''
+@userRoute.route('/user_list', methods=['GET'])
+@login_required
+def user_list():
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.filter().order_by(User.id.desc()).paginate(page, per_page =10, error_out = False)
+    return render_template('admin/user_list.html', users = pagination.items, pagination = pagination)
+
+''' 用户新增或编辑，页面 '''
+@userRoute.route('/user_modify', methods=['GET'])
+@login_required
+def user_modify():
+    try:
+        user_id = request.args.get('user_id', 0, type=int)
+        user = User.query.filter(User.id == user_id).first()
+        return render_template('admin/user_modify.html', user = user)
+    except Exception as err:
+        return render_template('error.html', err = err)
+
+''' 用户新增或编辑，提交 '''
+@userRoute.route('/user_modify', methods=['POST'])
+@login_required
+def user_modify_submit():
+    try:
+        user_id = request.form.get('id')
+        account = request.form.get('account')
+        nickname = request.form.get('nickname')
+        password = request.form.get('password')
+        role = request.form.get('role')
+        status = request.form.get('status')
+        if user_id != '' and user_id != None:
+            # 编辑
+            i = User.query.filter(User.id == user_id).update({'account': account, 'nickname': nickname, 'password': md5(password), 'role': role, 'status': status})
+            if i > 0:
+                return Result('true', '用户修改成功！', None)
+            else:
+                return Result('false', '用户修改失败！', None)
+        else:
+            # 新增
+            user = User(account, nickname, password, role, status)
+            db.session.add(user)
+            db.session.commit()
+            return Result('true', 'hahhaha', None)
+    except Exception as err:
+        return Result('false', err, None)
+
+@userRoute.route('/user_status', methods=['POST'])
+@login_required 
+def user_status():
+    try:
+        user_id = request.form.get('id')
+        status = request.form.get('status')
+        i = User.query.filter(User.id == user_id).update({'status': status})
+        if i > 0:
+            return Result('true', '修改成功！', None)
+        else:
+            return Result('false', '修改失败！', None)
+    except Exception as err:
+        return Result('false', err, None)
