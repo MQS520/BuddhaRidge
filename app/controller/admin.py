@@ -178,6 +178,7 @@ def user_modify_submit():
     except Exception as err:
         return Result('false', err, None)
 
+''' 用户状态编辑 '''
 @userRoute.route('/user_status', methods=['POST'])
 @login_required 
 def user_status():

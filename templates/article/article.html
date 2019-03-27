@@ -17,10 +17,14 @@
                         <br><br><span><a href="#">{{ article.pushtime }}</a></span>
                     </p>
                 </div>
+                <p id="article" hidden>{{ article.content }}</p>
                 <div class="am-article-bd">
-                    <p>{{ article.content }}
+                    <div id="articleEdit">
+                        <textarea></textarea>
+                    </div>
+                    <!-- <p>{{ article.content }}
                     </p>
-                    </p>
+                    </p> -->
                 </div>
             </article>
 
@@ -71,4 +75,17 @@
         </div>
     </div>
     <!-- content end -->
+
+    <script>
+        $(function(){
+            articleEdit = editormd.markdownToHTML("articleEdit", {
+                markdown: $("#article").html(),
+                htmlDecode: "style,script,iframe",
+                emoji: true,
+                taskList: true,
+                tex: true,
+                sequenceDiagram: true
+            });
+        })
+    </script>
 {% endblock %}
